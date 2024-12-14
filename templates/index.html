@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Car Price Predictor</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .card {
+            background-color: #1f1f1f;
+            border: 1px solid #333;
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #0056b3;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #003f7f;
+        }
+
+        footer {
+            margin-top: 20px;
+            padding: 10px 0;
+            background-color: #1f1f1f;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="card mt-5" style="width: 100%;">
+                <div class="card-header text-center">
+                    <h1>Welcome to Car Price Predictor</h1>
+                </div>
+                <div class="card-body">
+                    <form method="post" accept-charset="utf-8">
+                        <div class="col-md-10 form-group mx-auto">
+                            <label><b>Select the car brand:</b></label>
+                            <select class="selectpicker form-control bg-dark text-light" id="brand" name="brand" required="1">
+                                 {% for brand in Brands %}
+                                <option value="{{ brand }}">{{ brand }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-10 form-group mx-auto">
+                            <label><b>Select year of Registration:</b></label>
+                            <select class="selectpicker form-control bg-dark text-light" id="year" name="year" required>
+                                {% for year in Years %}
+                                <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-10 form-group mx-auto">
+                            <label><b>Select Transmission type:</b></label>
+                            <select class="selectpicker form-control bg-dark text-light" id="transmission" name="transmission" required>
+                                {% for trans in Transmission %}
+                                 <option value="{{ trans }}">{{ trans }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-10 form-group mx-auto">
+                            <label><b>Select Fuel Type:</b></label>
+                            <select class="selectpicker form-control bg-dark text-light" id="fuel_type" name="fuel_type" required>
+                                {% for fuel in Fuel_type %}
+                                <option value="{{ fuel }}">{{ fuel }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-10 form-group mx-auto">
+                            <label><b>Select owner type:</b></label>
+                            <select class="selectpicker form-control bg-dark text-light" id="owner" name="owner" required>
+                                {% for owner in Owner_type %}
+                               <option value="{{ owner }}">{{ owner }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-10 form-group mx-auto">
+                            <label><b>Enter number of kilometers travelled:</b></label>
+                            <input class="form-control bg-dark text-light" type="number" id="kilo_driven" name="kilo_driven" placeholder="Enter no of kilometers travelled" required min="0" step="any">
+                        </div>
+                        <div class="col-md-10 form-group mx-auto">
+                            <button class="btn btn-primary form-control" onclick="send_data()">Predict the Price</button>
+                        </div>
+                    </form>
+                    <br>
+                    <div class="row">
+                        <div class="col-12" style="text-align: center">
+                            <h4><span id="prediction"></span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <p>Developed by <strong>Saket</strong></p>
+    </footer>
+
+<script>
+    function form_handler(event) {
+        event.preventDefault();
+    }
+
+    function send_data() {
+        document.querySelector('form').addEventListener("submit", form_handler);
+        var fd = new FormData(document.querySelector('form'));
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/predict', true);
+        document.getElementById('prediction').innerHTML = "Wait! Predicting Price.....";
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                document.getElementById('prediction').innerHTML = "Prediction: ₹" + xhr.responseText;
+            }
+        }
+        xhr.onload= function(){};
+        xhr.send(fd);
+    }
+</script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+</body>
+</html>
